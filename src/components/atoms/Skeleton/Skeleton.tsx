@@ -44,5 +44,3 @@ export const Skeleton = ({
 	// Render as div for default variant
 	return <div className={skeletonClasses} {...rest} />;
 };
-
-export default Skeleton;

@@ -1,6 +1,5 @@
-const GuestSelector = () => {
+export const GuestSelector = () => {
 	return (
 		<div>GuestSelector</div>
 	)
 }
-export default GuestSelector

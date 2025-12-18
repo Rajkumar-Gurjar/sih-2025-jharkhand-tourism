@@ -58,5 +58,3 @@ export const Input = (props: InputProps) => {
 		<input {...rest} className={inputClasses} />
 	);
 };
-
-export default Input;

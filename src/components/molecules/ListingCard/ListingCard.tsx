@@ -1,6 +1,5 @@
-const ListingCard = () => {
+export const ListingCard = () => {
 	return (
 		<div>ListingCard</div>
 	)
 }
-export default ListingCard
