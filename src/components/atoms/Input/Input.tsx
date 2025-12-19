@@ -10,7 +10,7 @@ export const Input = (props: InputProps) => {
 	const {
 		size = 'md',
 		variant,
-		style = 'default',
+		inputStyle = 'default',
 		className = '',
 		bordered = false,
 		...rest
@@ -48,7 +48,7 @@ export const Input = (props: InputProps) => {
 		'input',
 		sizeClasses[size],
 		variant && variantClasses[variant],
-		styleClasses[style],
+		styleClasses[inputStyle],
 		bordered && 'input-bordered',
 		className
 	].filter(Boolean).join(' ');

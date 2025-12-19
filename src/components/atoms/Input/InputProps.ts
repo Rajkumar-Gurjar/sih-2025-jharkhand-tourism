@@ -18,7 +18,7 @@ import type { InputHTMLAttributes } from 'react';
  *
  * @example
  * // Input with ghost style
- * <Input type="text" style="ghost" placeholder="Ghost input" />
+ * <Input type="text" inputStyle="ghost" placeholder="Ghost input" />
  *
  * @example
  * // Disabled input
@@ -38,8 +38,8 @@ export interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 
 	size?: InputSize;
 	/** Color variant */
 	variant?: InputVariant;
-	/** Style variant */
-	style?: InputStyle;
+	/** Style variant (use inputStyle to avoid conflict with HTML style attribute) */
+	inputStyle?: InputStyle;
 	/** Additional CSS classes */
 	className?: string;
 	/** Adds border to the input */

@@ -19,7 +19,7 @@ const meta = {
 			options: ['neutral', 'primary', 'secondary', 'accent', 'info', 'success', 'warning', 'error'],
 			description: 'Color variant of the input',
 		},
-		style: {
+		inputStyle: {
 			control: 'select',
 			options: ['default', 'ghost'],
 			description: 'Style variant of the input',
@@ -105,7 +105,7 @@ export const Colors: Story = {
 export const Ghost: Story = {
 	args: {
 		type: 'text',
-		style: 'ghost',
+		inputStyle: 'ghost',
 		placeholder: 'Ghost input',
 	},
 };
