@@ -35,9 +35,53 @@ interface RawHomestay {
 }
 
 /**
+ * Curated placeholder images for homestays (nature, cottages, landscapes)
+ */
+const HOMESTAY_PLACEHOLDER_IMAGES = [
+	'https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=800&h=600&fit=crop',
+	'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=800&h=600&fit=crop',
+	'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&h=600&fit=crop',
+	'https://images.unsplash.com/photo-1587061949409-02df41d5e562?w=800&h=600&fit=crop',
+	'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&h=600&fit=crop',
+	'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&h=600&fit=crop',
+	'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&h=600&fit=crop',
+	'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&h=600&fit=crop',
+	'https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?w=800&h=600&fit=crop',
+	'https://images.unsplash.com/photo-1505916349660-8d91a99c3e23?w=800&h=600&fit=crop',
+];
+
+/**
+ * Check if an image URL is valid/usable
+ */
+function isValidImageUrl(url: string): boolean {
+	if (!url || typeof url !== 'string') return false;
+	// Accept Unsplash, Pexels, and other quality image sources
+	const validDomains = ['unsplash.com', 'pexels.com', 'picsum.photos', 'placehold.co'];
+	return validDomains.some(domain => url.includes(domain));
+}
+
+/**
+ * Get a placeholder image based on index for consistency
+ */
+function getPlaceholderImage(index: number): string {
+	return HOMESTAY_PLACEHOLDER_IMAGES[index % HOMESTAY_PLACEHOLDER_IMAGES.length];
+}
+
+/**
  * Normalize raw API data to expected Homestay format
  */
-function normalizeHomestay(raw: RawHomestay): Homestay {
+function normalizeHomestay(raw: RawHomestay, index: number = 0): Homestay {
+	// Extract and validate images
+	const rawImages = Array.isArray(raw.images)
+		? raw.images.map(img => typeof img === 'string' ? img : img.item)
+		: [];
+
+	// Replace invalid images with placeholders
+	const validImages = rawImages.filter(isValidImageUrl);
+	const images = validImages.length > 0
+		? validImages
+		: [getPlaceholderImage(index), getPlaceholderImage(index + 1)];
+
 	return {
 		id: String(raw.id),
 		title: raw.title,
@@ -47,13 +91,10 @@ function normalizeHomestay(raw: RawHomestay): Homestay {
 		price: raw.price,
 		rating: raw.rating,
 		reviewCount: raw.reviewCount,
-		// Handle images as either string[] or {item: string}[]
-		images: Array.isArray(raw.images)
-			? raw.images.map(img => typeof img === 'string' ? img : img.item)
-			: [],
+		images,
 		// Handle amenities as either string[] or {item: string}[]
 		amenities: Array.isArray(raw.amenities)
-			? raw.amenities.map(a => typeof a === 'string' ? a : a.item)
+			? raw.amenities.map(a => typeof a === 'string' ? a : a.item).filter(a => !a.includes('error:'))
 			: [],
 		hostId: raw.hostId,
 		hostName: raw.hostName,
@@ -66,7 +107,7 @@ function normalizeHomestay(raw: RawHomestay): Homestay {
 		maxStay: raw.maxStay,
 		// Handle houseRules as either string[] or {item: string}[]
 		houseRules: Array.isArray(raw.houseRules)
-			? raw.houseRules.map(r => typeof r === 'string' ? r : r.item)
+			? raw.houseRules.map(r => typeof r === 'string' ? r : r.item).filter(r => !r.includes('error:'))
 			: [],
 		coordinates: raw.coordinates,
 	};
@@ -90,7 +131,7 @@ export const homestaysService = {
 			? response.data
 			: response.data.data;
 
-		const normalizedData = rawData.map(normalizeHomestay);
+		const normalizedData = rawData.map((item, index) => normalizeHomestay(item, index));
 
 		// Return in ApiResponse format
 		return {
@@ -147,6 +188,6 @@ export const homestaysService = {
 			? response.data
 			: response.data.data;
 
-		return rawData.map(normalizeHomestay);
+		return rawData.map((item, index) => normalizeHomestay(item, index));
 	},
 };
