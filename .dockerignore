@@ -1,0 +1,72 @@
+# =============================================================================
+# Docker Ignore File
+# =============================================================================
+# Files and directories listed here will NOT be copied into the Docker image.
+# This reduces build time and image size, and prevents sensitive data from
+# being included in the image.
+# =============================================================================
+
+# Dependencies (will be installed fresh in the container)
+node_modules
+
+# Build output (will be built in the container)
+dist
+build
+
+# Git and version control
+.git
+.gitignore
+
+# IDE and editor files
+.idea
+.vscode
+*.swp
+*.swo
+*~
+
+# Environment files (contain secrets!)
+.env
+.env.local
+.env.*.local
+.env.development
+.env.production
+
+# Test files and coverage
+coverage
+*.test.ts
+*.test.tsx
+*.spec.ts
+*.spec.tsx
+__tests__
+__mocks__
+
+# Documentation
+*.md
+docs
+.tours
+
+# Storybook (not needed in production)
+.storybook
+storybook-static
+
+# Docker files (avoid recursive copy)
+Dockerfile*
+docker-compose*.yml
+.dockerignore
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+tmp
+temp
+*.tmp
+
+# Package manager lock files (we use package-lock.json, ignore others)
+yarn.lock
+pnpm-lock.yaml

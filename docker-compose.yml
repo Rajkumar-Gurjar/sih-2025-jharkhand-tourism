@@ -1,0 +1,53 @@
+# =============================================================================
+# Docker Compose - JharkhandYatra Frontend
+# =============================================================================
+# This file defines the Docker services for running the frontend application.
+# It can be used standalone or in combination with the backend's docker-compose.
+#
+# Usage:
+#   Development:  docker compose up --build
+#   Production:   docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+#   Stop:         docker compose down
+#   Logs:         docker compose logs -f frontend
+# =============================================================================
+
+services:
+    # =========================================================================
+    # Frontend Service
+    # =========================================================================
+    # Serves the React application using nginx
+    # Built using a multi-stage Dockerfile for optimal image size
+    frontend:
+        build:
+            context: .
+            dockerfile: Dockerfile
+            args:
+                # Build-time environment variables
+                # These are baked into the JavaScript bundle during build
+                VITE_API_BASE_URL: ${VITE_API_BASE_URL:-https://32f06025-c3ba-4ae3-8fbe-19fcab212c6b.mock.pstmn.io}
+                VITE_POSTMAN_API_KEY: ${VITE_POSTMAN_API_KEY:-}
+        container_name: jharkhand-tourism-frontend
+        restart: unless-stopped
+        ports:
+            # Map container port 80 to host port (default 3000)
+            - "${FRONTEND_PORT:-3000}:80"
+        environment:
+            # Runtime environment (nginx doesn't need much)
+            TZ: ${TZ:-Asia/Kolkata}
+        networks:
+            - frontend-network
+        healthcheck:
+            # Check if nginx is responding
+            test: ["CMD", "curl", "-f", "http://localhost/"]
+            interval: 30s
+            timeout: 10s
+            retries: 3
+            start_period: 10s
+
+# =============================================================================
+# Networks
+# =============================================================================
+# Define isolated networks for the services
+networks:
+    frontend-network:
+        driver: bridge
